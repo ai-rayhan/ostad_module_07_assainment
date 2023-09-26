@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:ostad_module_07_assainment/models/product.dart';
+
+import '../models/cart.dart';
 
 class CartScreen extends StatelessWidget {
   final List<Product> products;
@@ -9,14 +10,40 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int totalItems = products.fold(0, (sum, product) => sum + product.counter);
-
+    final cart = Cart();
+    for (var product in products) {
+      if (product.counter > 0) {
+        cart.items[product] = product.counter;
+      }
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart Page'),
+        title: const Text('Cart'),
       ),
-      body: Center(
-        child: Text('Total Items in Cart: $totalItems'),
+      body: ListView(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text("${cart.items.keys.length} Product in Cart"),
+                  Text(
+                    'Total: \$${cart.totalPrice}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          for (final product in cart.items.keys)
+            ListTile(
+              title: Text('${product.name} x${cart.items[product]}'),
+              subtitle: Text(
+                  '\$${(product.price * cart.items[product]!)}'),
+            ),
+        ],
       ),
     );
   }
