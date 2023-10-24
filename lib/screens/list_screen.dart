@@ -28,6 +28,7 @@ class _TextListScreenState extends State<TextListScreen> {
           )
         ],
       ),
+      
       body: ListView(
         children: [
           Container(
